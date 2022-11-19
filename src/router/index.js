@@ -13,14 +13,20 @@ const routes = [
     component: CoachesList,
   },
   {
-    path: "/coach:id",
+    path: "/coach/:id",
     name: "coach",
     component: () => import("../views/coaches/CoachDetail"),
+    children: [
+      {
+        path: "contact",
+        component: () => import("../views/requests/ContactCoach"),
+      },
+    ],
   },
   {
     path: "/register",
     name: "register",
-    component: () => import("../views/requests/ContactCoach"),
+    component: () => import("../views/coaches/CoachRegister"),
   },
   {
     path: "/requests",
