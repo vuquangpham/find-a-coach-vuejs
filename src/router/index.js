@@ -13,9 +13,10 @@ const routes = [
     component: CoachesList,
   },
   {
-    path: "/coach/:id",
+    path: "/coaches/:id",
     name: "coach",
     component: () => import("../views/coaches/CoachDetail"),
+    props: true,
     children: [
       {
         path: "contact",

@@ -1,5 +1,59 @@
 <template>
-  DETAILS FOR COACH
-  <router-view></router-view>
-  <router-link to="/coach/c1/contact">Contact</router-link>
+  <section>
+    <BaseCard>
+      <h2>{{ fullName }}</h2>
+      <h3>${{ rate }}/hour</h3>
+    </BaseCard>
+  </section>
+  <section>
+    <BaseCard>
+      <header>
+        <h2>Interested? Reach out now!</h2>
+        <BaseButton link :to="contactLink">Contact</BaseButton>
+      </header>
+      <router-view></router-view>
+    </BaseCard>
+  </section>
+  <section>
+    <BaseCard>
+      <BaseBadge v-for="area in areas" :key="area" :title="area" :class="area"></BaseBadge>
+      <p>{{ description }}</p>
+    </BaseCard>
+  </section>
 </template>
+<script>
+import BaseCard from "@/components/ui/BaseCard";
+import BaseButton from "@/components/ui/BaseButton";
+import BaseBadge from "@/components/ui/BaseBadge";
+
+export default {
+  components: {BaseBadge, BaseButton, BaseCard},
+  data(){
+    return {
+      selectedCoach: null,
+    };
+  },
+  props: ['id'],
+  computed: {
+    fullName(){
+      return this.selectedCoach.firstName + ' ' + this.selectedCoach.lastName;
+    },
+    areas(){
+      return this.selectedCoach.areas;
+    },
+    rate(){
+      return this.selectedCoach.hourlyRate;
+    },
+    description(){
+      return this.selectedCoach.description;
+    },
+    contactLink(){
+      console.log(this.$route);
+      return this.$route.path + '/contact';
+    }
+  },
+  created(){
+    this.selectedCoach = this.$store.getters['coaches/coaches'].find(coach => coach.id === this.id);
+  }
+};
+</script>
