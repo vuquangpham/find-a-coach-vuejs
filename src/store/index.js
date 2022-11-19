@@ -1,13 +1,29 @@
-import { createStore } from "vuex";
+import {createStore} from "vuex";
 
 import coachesModule from "./modules/coaches";
 
 export default createStore({
-  state: {},
-  getters: {},
-  mutations: {},
-  actions: {},
-  modules: {
-    coaches: coachesModule,
-  },
+    state: {
+        userId: ''
+    },
+    getters: {
+        userId(state){
+            if(!state.userId) return false;
+            return state.userId;
+        }
+    },
+    mutations: {
+        setUserId(state, payload){
+            console.log(payload);
+            state.userId = payload;
+        }
+    },
+    actions: {
+        setUserId(context, payload){
+            context.commit('setUserId', payload);
+        }
+    },
+    modules: {
+        coaches: coachesModule,
+    },
 });
