@@ -1,4 +1,4 @@
-# find-a-coach
+# Finding Your Coach
 
 ## Project setup
 ```
