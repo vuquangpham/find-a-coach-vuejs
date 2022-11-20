@@ -26,7 +26,11 @@ export default {
             id: userId
         });
     },
-    loadCoaches(context){
+    loadCoaches(context, payload){
+        if(!payload.forceRefresh && !context.getters.shouldUpdate){
+            return;
+        }
+
         return new Promise((resolve, reject) => {
             fetch(`${API_ENDPOINT}/coaches.json`)
                 .then(res => {
@@ -58,6 +62,7 @@ export default {
                     }
 
                     context.commit('setCoaches', coaches);
+                    context.commit('setFetchTimesstamp');
                     resolve();
                 })
                 .catch(err => {

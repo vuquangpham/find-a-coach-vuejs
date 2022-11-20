@@ -4,6 +4,7 @@ import getters from "./getters";
 export default {
   namespaced: true,
   state: {
+    lastFetch: null,
     coaches: [
       {
         id: "c1",
@@ -11,7 +12,7 @@ export default {
         lastName: "Schwarzmüller",
         areas: ["frontend", "backend", "career"],
         description:
-          "I'm Maximilian and I've worked as a freelance web developer for years. Let me help you become a developer as well!",
+            "I'm Maximilian and I've worked as a freelance web developer for years. Let me help you become a developer as well!",
         hourlyRate: 30,
       },
       {
