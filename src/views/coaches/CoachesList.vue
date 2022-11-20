@@ -1,14 +1,20 @@
 <template>
+  <BaseDialog :show="!!error" title="An error occurred!" @close="handleError">
+    <p>{{ error }}</p>
+  </BaseDialog>
   <section>
     <CoachFilter @change-filter="setFilters"/>
   </section>
   <section>
     <BaseCard>
       <div class="controls">
-        <BaseButton mode="outline">Refresh</BaseButton>
-        <BaseButton v-if="!userId" link to="/register">Register as Coach</BaseButton>
+        <BaseButton mode="outline" @click="loadCoaches">Refresh</BaseButton>
+        <BaseButton v-if="!isCoach && !isLoading" link to="/register">Register as Coach</BaseButton>
       </div>
-      <ul v-if="hasCoaches">
+      <div v-if="isLoading">
+        <BaseSpinner/>
+      </div>
+      <ul v-else-if="hasCoaches">
         <CoachItem
             v-for="coach in filteredCoaches"
             :key="coach.id"
@@ -29,9 +35,13 @@ import CoachItem from "@/components/coaches/CoachItem.vue";
 import BaseCard from "@/components/ui/BaseCard.vue";
 import BaseButton from "@/components/ui/BaseButton.vue";
 import CoachFilter from "@/components/coaches/CoachFilter";
+import BaseSpinner from "@/components/ui/BaseSpinner";
+import BaseDialog from "@/components/ui/BaseDialog";
 
 export default {
   components: {
+    BaseDialog,
+    BaseSpinner,
     CoachFilter,
     CoachItem,
     BaseCard,
@@ -43,7 +53,9 @@ export default {
         frontend: true,
         backend: true,
         career: true,
-      }
+      },
+      isLoading: false,
+      error: ''
     };
   },
   computed: {
@@ -57,17 +69,32 @@ export default {
       });
     },
     hasCoaches(){
-      return this.$store.getters["coaches/hasCoaches"];
+      return !this.isLoading && this.$store.getters["coaches/hasCoaches"];
     },
-    userId(){
-      console.log(this.$store, this.$store.getters['userId']);
-      return this.$store.getters['userId'];
+    isCoach(){
+      return this.$store.getters['coaches/isCoach'];
     }
   },
   methods: {
     setFilters(updatedFilters){
       this.activeFilters = updatedFilters;
+    },
+    loadCoaches(){
+      this.isLoading = true;
+      this.$store.dispatch('coaches/loadCoaches')
+          .catch(err => {
+            this.error = err.message;
+          })
+          .finally(() => {
+            this.isLoading = false;
+          });
+    },
+    handleError(){
+      this.error = false;
     }
+  },
+  created(){
+    this.loadCoaches();
   }
 };
 </script>

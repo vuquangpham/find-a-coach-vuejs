@@ -5,7 +5,7 @@ import requestsModule from "./modules/requests";
 
 export default createStore({
     state: {
-        userId: ''
+        userId: 'c3'
     },
     getters: {
         userId(state){
@@ -13,17 +13,7 @@ export default createStore({
             return state.userId;
         }
     },
-    mutations: {
-        setUserId(state, payload){
-            console.log(payload);
-            state.userId = payload;
-        }
-    },
-    actions: {
-        setUserId(context, payload){
-            context.commit('setUserId', payload);
-        }
-    },
+
     modules: {
         coaches: coachesModule,
         requests: requestsModule
