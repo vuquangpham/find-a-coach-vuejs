@@ -11,7 +11,7 @@ export default {
             areas: data.areas,
         };
 
-        fetch(`${API_ENDPOINT}/${userId}.json`, {
+        fetch(`${API_ENDPOINT}/coaches/${userId}.json`, {
             method: 'POST',
             body: JSON.stringify(coachData)
         })
@@ -38,19 +38,23 @@ export default {
                 .then(data => {
                     if(!data){
                         context.commit('setCoaches', []);
+                        resolve();
                         return;
                     }
                     const coaches = [];
-                    for(const key of data){
-                        const coach = {
-                            id: key,
-                            firstName: data[key].firstName,
-                            lastName: data[key].lastName,
-                            description: data[key].description,
-                            hourlyRate: data[key].hourlyRate,
-                            areas: data[key].areas
-                        };
-                        coaches.push(coach);
+                    console.log(data);
+                    for(const id in data){
+                        for(const key in data[id]){
+                            const coach = {
+                                id,
+                                firstName: data[id][key].firstName,
+                                lastName: data[id][key].lastName,
+                                description: data[id][key].description,
+                                hourlyRate: data[id][key].hourlyRate,
+                                areas: data[id][key].areas
+                            };
+                            coaches.push(coach);
+                        }
                     }
 
                     context.commit('setCoaches', coaches);

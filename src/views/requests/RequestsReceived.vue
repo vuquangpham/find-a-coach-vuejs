@@ -4,7 +4,8 @@
       <header>
         <h2>Requests Received</h2>
       </header>
-      <ul v-if="hasRequests">
+      <BaseSpinner v-if="isLoading"/>
+      <ul v-if="hasRequests && !isLoading">
         <RequestItem v-for="req in receivedRequests" :key="req.id" :email="req.userEmail" :message="req.message"/>
       </ul>
       <h3 v-else>You haven't received any requests yet!</h3>
@@ -15,15 +16,30 @@
 <script>
 import BaseCard from "@/components/ui/BaseCard";
 import RequestItem from "@/components/requests/RequestItem";
+import BaseSpinner from "@/components/ui/BaseSpinner";
 
 export default {
-  components: {RequestItem, BaseCard},
+  components: {BaseSpinner, RequestItem, BaseCard},
+  data(){
+    return {
+      isLoading: false
+    };
+  },
   computed: {
     receivedRequests(){
       return this.$store.getters['requests/requests'];
     },
     hasRequests(){
       return this.$store.getters['requests/hasRequests'];
+    },
+  },
+  methods: {
+    loadRequests(){
+      this.isLoading = true;
+      this.$store.dispatch('requests/fetchRequests')
+          .finally(() => {
+            this.isLoading = false;
+          });
     }
   }
 };
