@@ -7,6 +7,7 @@ export default {
         userId: null,
         token: null,
         tokenExpiration: null,
+        didLougout: false
     },
     getters,
     mutations,
