@@ -1,28 +1,45 @@
 <template>
-  <section>
-    <BaseCard>
-      <header>
-        <h2>Requests Received</h2>
-      </header>
-      <BaseSpinner v-if="isLoading"/>
-      <ul v-if="hasRequests && !isLoading">
-        <RequestItem v-for="req in receivedRequests" :key="req.id" :email="req.userEmail" :message="req.message"/>
-      </ul>
-      <h3 v-else>You haven't received any requests yet!</h3>
-    </BaseCard>
-  </section>
+  <div>
+    <BaseDialog :show="!!error" title="An error occurred!" @close="handleError">
+      <p>{{ error }}</p>
+    </BaseDialog>
+    <section>
+      <BaseCard>
+        <header>
+          <h2>Requests Received</h2>
+        </header>
+        <BaseSpinner v-if="isLoading"></BaseSpinner>
+        <ul v-else-if="hasRequests && !isLoading">
+          <request-item
+              v-for="req in receivedRequests"
+              :key="req.id"
+              :email="req.userEmail"
+              :message="req.message"
+          ></request-item>
+        </ul>
+        <h3 v-else>You haven't received any requests yet!</h3>
+      </BaseCard>
+    </section>
+  </div>
 </template>
 
 <script>
-import BaseCard from "@/components/ui/BaseCard";
-import RequestItem from "@/components/requests/RequestItem";
+import RequestItem from '../../components/requests/RequestItem.vue';
+import BaseDialog from "@/components/ui/BaseDialog";
 import BaseSpinner from "@/components/ui/BaseSpinner";
+import BaseCard from "@/components/ui/BaseCard";
 
 export default {
-  components: {BaseSpinner, RequestItem, BaseCard},
+  components: {
+    BaseCard,
+    BaseSpinner,
+    BaseDialog,
+    RequestItem,
+  },
   data(){
     return {
-      isLoading: false
+      isLoading: false,
+      error: null,
     };
   },
   computed: {
@@ -33,15 +50,23 @@ export default {
       return this.$store.getters['requests/hasRequests'];
     },
   },
+  created(){
+    this.loadRequests();
+  },
   methods: {
-    loadRequests(){
+    async loadRequests(){
       this.isLoading = true;
-      this.$store.dispatch('requests/fetchRequests')
-          .finally(() => {
-            this.isLoading = false;
-          });
-    }
-  }
+      try{
+        await this.$store.dispatch('requests/fetchRequests');
+      }catch(error){
+        this.error = error.message || 'Something failed!';
+      }
+      this.isLoading = false;
+    },
+    handleError(){
+      this.error = null;
+    },
+  },
 };
 </script>
 

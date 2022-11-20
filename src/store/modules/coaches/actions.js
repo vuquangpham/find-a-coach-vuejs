@@ -11,7 +11,9 @@ export default {
             areas: data.areas,
         };
 
-        fetch(`${API_ENDPOINT}/coaches/${userId}.json`, {
+        const token = context.rootGetters.token;
+
+        fetch(`${API_ENDPOINT}/coaches/${userId}.json?auth=${token}`, {
             method: 'POST',
             body: JSON.stringify(coachData)
         })
