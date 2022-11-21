@@ -50,7 +50,6 @@ export default {
       return this.selectedCoach.description;
     },
     contactLink(){
-      console.log(this.$route);
       return this.$route.path + '/contact';
     }
   },

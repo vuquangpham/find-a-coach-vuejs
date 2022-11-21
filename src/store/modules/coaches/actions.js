@@ -48,7 +48,6 @@ export default {
                         return;
                     }
                     const coaches = [];
-                    console.log(data);
                     for(const id in data){
                         for(const key in data[id]){
                             const coach = {

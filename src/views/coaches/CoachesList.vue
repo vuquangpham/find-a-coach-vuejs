@@ -86,7 +86,6 @@ export default {
       this.activeFilters = updatedFilters;
     },
     loadCoaches(forced = false){
-      console.log(forced);
       this.isLoading = true;
       this.$store.dispatch('coaches/loadCoaches', {forceRefresh: forced})
           .catch(err => {

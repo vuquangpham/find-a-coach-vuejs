@@ -15,7 +15,7 @@
           <router-link to="/auth">Login</router-link>
         </li>
         <li v-if="isLoggedIn" @click="logout">
-          <router-link>Logout</router-link>
+          <BaseButton>Logout</BaseButton>
         </li>
       </ul>
     </nav>
@@ -23,7 +23,9 @@
 </template>
 
 <script>
+import BaseButton from "@/components/ui/BaseButton";
 export default {
+  components: {BaseButton},
   computed: {
     isLoggedIn(){
       return this.$store.getters['isAuthenticated'];
